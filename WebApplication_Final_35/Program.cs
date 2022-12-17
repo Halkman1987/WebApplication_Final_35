@@ -2,29 +2,23 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApplication_Final_35;
 
- IConfiguration configuration;
-//IApplicationBuilder app;
-IWebHostEnvironment env;
-
-var connection = configuration.GetConnectionString("DefaultConnection");
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options => 
-                                options.UseSqlServer(connection));
-
-builder.Services.AddIdentity<User, IdentityRole>(opts =>
-{
+string connection = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
+builder.Services.AddIdentity<User, IdentityRole>(opts => {
     opts.Password.RequiredLength = 5;
     opts.Password.RequireNonAlphanumeric = false;
     opts.Password.RequireLowercase = false;
     opts.Password.RequireUppercase = false;
     opts.Password.RequireDigit = false;
 })
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+                    .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
 var app = builder.Build();
 
